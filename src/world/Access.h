@@ -60,7 +60,7 @@ extern map<string,RamFile> kernelFS;
 //if doing an index there needs to be an array in here.
 
 extern map<string,MyRamFile> myKernelFS;
-extern char* savedMemory;
+extern char savedMemory[];
 //initalize savedMemory here so that it is accessible where ever myKernelFS is accessable
 
 class FileAccess : public Access {
@@ -109,4 +109,4 @@ public:
   }
 };
 
-#endif /* _Access_h_ */;
+#endif /* _Access_h_ */
