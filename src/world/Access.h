@@ -58,19 +58,24 @@ extern map<string,RamFile> kernelFS;
 //Laura gonna keep this and create my own copy. order: virtual memory acess, physical memory adress, size.
 //if you are doing a link list need the head in here to
 //if doing an index there needs to be an array in here.
-
+/*A3*/
 extern map<string,MyRamFile> myKernelFS;
-extern char savedMemory[];
+extern char* savedMemory;
+/*A3*/
 //initalize savedMemory here so that it is accessible where ever myKernelFS is accessable
 
 class FileAccess : public Access {
   SpinLock olock;
   off_t offset;
   const RamFile &rf;
+  /*A3*/
+  //const MyRamFile &myrf;
+  /*A3*/
 public:
 
 /*A3*/
   FileAccess(const RamFile& rf) : offset(0), rf(rf) {}
+ // FileAccess(const MyRamFile& myrf) : offset(0), rf(myrf) {}
   virtual ssize_t pread(void *buf, size_t nbyte, off_t o);
   virtual ssize_t pwrite(off_t o, size_t nbyte, void *buf);
   virtual ssize_t read(void *buf, size_t nbyte);

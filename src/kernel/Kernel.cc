@@ -29,6 +29,7 @@ volatile mword Clock::tick;     // Clock.h
 
 extern Keyboard keyboard;
 
+
 #if TESTING_KEYCODE_LOOP
 static void keybLoop() {
   for (;;) {
@@ -53,21 +54,148 @@ void kosMain() {
     KOUT::outl();
   }
 /*A3*/
-  KOUT::out1("myKernelFS"); 		//fill myKernelFS the same way kernelFS was filled.
-  KOUT::outl();/*
+	string outputmessage="My filesystem works !";
+	char outputMessage [20];
+	for (int i=0; i<21;i++)
+	{
+		outputMessage[i]=outputmessage[i];
+	}
+
+  /*KOUT::out1("myKernelFS"); 		//fill myKernelFS the same way kernelFS was filled.
+  KOUT::outl();
   auto iter3 = myKernelFS.find("motb");
   if (iter3 == myKernelFS.end()) {
     KOUT::outl("motb information not found");
   } else {
-    FileAccess f(iter->second);
+    FileAccess f(iter3->second);
     for (;;) {
+      char c;
+      if (f.read(&c, 1) == 0) break;
+      KOUT::out1(c);
+    }
+	KOUT::outl();
+	for(int i=0; i<21; i++)
+	{
+		if(f.write(&outputMessage[i], 1)==0) break;
+			KOUT:out1("wrote to file");
+	}
+	KOUT::outl();
+ 	for (;;) {
       char c;
       if (f.read(&c, 1) == 0) break;
       KOUT::out1(c);
     }
     KOUT::outl();
    }
-*/
+
+  KOUT::out1("myKernelFS"); 		//fill myKernelFS the same way kernelFS was filled.
+  KOUT::outl();
+  auto iter4 = myKernelFS.find("kbloop");
+  if (iter4 == myKernelFS.end()) {
+    KOUT::outl("kbloop information not found");
+  } else {
+    FileAccess f(iter4->second);
+    for (;;) {
+      char c;
+      if (f.read(&c, 1) == 0) break;
+      KOUT::out1(c);
+    }
+	KOUT::outl();
+	for(int i=0; i<21; i++)
+	{
+		if(f.write(&outputMessage[i], 1)==0) break;
+			KOUT:out1("wrote to file");
+	}
+	KOUT::outl();
+ 	for (;;) {
+      char c;
+      if (f.read(&c, 1) == 0) break;
+      KOUT::out1(c);
+    }
+    KOUT::outl();
+   }
+
+  KOUT::out1("myKernelFS"); 		
+  KOUT::outl();
+  auto iter5 = myKernelFS.find("manytthread");
+  if (iter5 == myKernelFS.end()) {
+    KOUT::outl("manythread information not found");
+  } else {
+    FileAccess f(iter5->second);
+    for (;;) {
+      char c;
+      if (f.read(&c, 1) == 0) break;
+      KOUT::out1(c);
+    }
+	KOUT::outl();
+	for(int i=0; i<21; i++)
+	{
+		if(f.write(&outputMessage[i], 1)==0) break;
+			KOUT:out1("wrote to file");
+	}
+	KOUT::outl();
+ 	for (;;) {
+      char c;
+      if (f.read(&c, 1) == 0) break;
+      KOUT::out1(c);
+    }
+    KOUT::outl();
+   }
+
+  KOUT::out1("myKernelFS"); 		//fill myKernelFS the same way kernelFS was filled.
+  KOUT::outl();
+  auto iter6 = myKernelFS.find("systest");
+  if (iter6 == myKernelFS.end()) {
+    KOUT::outl("systest information not found");
+  } else {
+    FileAccess f(iter6->second);
+    for (;;) {
+      char c;
+      if (f.read(&c, 1) == 0) break;
+      KOUT::out1(c);
+    }
+	KOUT::outl();
+	for(int i=0; i<21; i++)
+	{
+		if(f.write(&outputMessage[i], 1)==0) break;
+			KOUT:out1("wrote to file");
+	}
+	KOUT::outl();
+ 	for (;;) {
+      char c;
+      if (f.read(&c, 1) == 0) break;
+      KOUT::out1(c);
+    }
+    KOUT::outl();
+   }
+
+  KOUT::out1("myKernelFS"); 		//fill myKernelFS the same way kernelFS was filled.
+  KOUT::outl();
+  auto iter7 = myKernelFS.find("threadtest");
+  if (iter7 == myKernelFS.end()) {
+    KOUT::outl("threadtest information not found");
+  } else {
+    FileAccess f(iter7->second);
+    for (;;) {
+      char c;
+      if (f.read(&c, 1) == 0) break;
+      KOUT::out1(c);
+    }
+	KOUT::outl();
+	for(int i=0; i<21; i++)
+	{
+		if(f.write(&outputMessage[i], 1)==0) break;
+		KOUT:out1("wrote to file");
+	}
+	KOUT::outl();
+ 	for (;;) {
+      char c;
+      if (f.read(&c, 1) == 0) break;
+      KOUT::out1(c);
+    }
+    KOUT::outl();
+   }*/
+
 	auto iter2 = kernelFS.find("filesystem_test");
     if (iter2 == kernelFS.end()) 
     {
@@ -82,9 +210,11 @@ void kosMain() {
             if (f.read(&c, 1) == 0) break;
 			KOUT::out1(c);
         }
-
         KOUT::outl();
     } 
+
+
+
 /*A3*/
 
 #if TESTING_TIMER_TEST

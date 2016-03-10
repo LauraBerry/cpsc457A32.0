@@ -20,6 +20,7 @@
 #include "world/Access.h"
 
 #include "extern/multiboot/multiboot2.h"
+	char temp [5000];
 
 // cf. 'multiboot_mmap_entry' in extern/multiboot/multiboot2.h
 static const char* memtype[] __section(".boot.data") = {
@@ -174,10 +175,14 @@ void Multiboot::readModules(vaddr disp) {
       string name = cmd.substr(0, cmd.find_first_of(' '));
       kernelFS.insert( {name, {tm->mod_start + disp, tm->mod_start, tm->mod_end - tm->mod_start}} );//(virtual, physical, size)
 	  /*A3*/
-		 void* pointer= &tm->mod_start+disp;	
-		 char temp [(tm->mod_end - tm->mod_start)]= {0};
-		memcpy(temp, pointer, (tm->mod_end - tm->mod_start));
-		 
+/*		 void* pointer= &tm->mod_start+disp;
+		 char temp [tm->mod_end - tm->mod_start];
+		memcpy(&temp, pointer, (tm->mod_end - tm->mod_start));*/
+for (int i=0; i<5000; i++)
+	{
+		temp[i]='a';
+		//savedMemory[i]=temp[i];
+	}	 		
 		 myKernelFS.insert( {name, {tm->mod_start + disp, tm->mod_start, tm->mod_end - tm->mod_start}} );
 	 /*A3*/		
     }
