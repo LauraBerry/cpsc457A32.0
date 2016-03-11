@@ -110,7 +110,7 @@ void kosMain() {
     {
 		KOUT::outl("filesystem_test information found");
 		KOUT::outl();
-        OurAccess f(iter2->second);
+        ReadAccess f(iter2->second);
         for (;;) 
         {
             char c;

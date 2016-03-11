@@ -23,7 +23,7 @@ map<string,MyRamFile> myKernelFS;
 char* savedMemory;
 
 /* A3 */
-ssize_t OurAccess::pread(void *buf, size_t nbyte, off_t o)
+ssize_t ReadAccess::pread(void *buf, size_t nbyte, off_t o)
 {
     // myrf -> myKernelFS
     if (o + nbyte > myrf.size)
@@ -37,12 +37,12 @@ ssize_t OurAccess::pread(void *buf, size_t nbyte, off_t o)
     return nbyte;
 }
 
-ssize_t OurAccess::read(void *buf, size_t nbyte) 
+ssize_t ReadAccess::read(void *buf, size_t nbyte) 
 {
     olock.acquire();
     
     //ask pread to read nbyte characters from location: offset and store it to location buf 
-    ssize_t len = OurAccess::pread(buf, nbyte, offset);
+    ssize_t len = ReadAccess::pread(buf, nbyte, offset);
     
     if (len >= 0)
     {
@@ -57,15 +57,15 @@ ssize_t OurAccess::read(void *buf, size_t nbyte)
 
 //Laura: i have the size, i check where it has to start and the number of bytes to see if it is to large
 //if it is to large i normalize it as much as possible
-ssize_t OurAccess::pwrite(off_t o,  size_t nbyte,void *buf)
+ssize_t WriteAccess::pwrite(off_t o,  size_t nbyte,void *buf)
 {
     return nbyte;
 }
 
-ssize_t OurAccess::write(void *buf, size_t nbyte) 
+ssize_t WriteAccess::write(void *buf, size_t nbyte) 
 {
     olock.acquire();
-    ssize_t len = OurAccess::pwrite(offset, nbyte, buf); 	//ask pread to read nbyte characters from location: buf and store it to location offset 
+    ssize_t len = WriteAccess::pwrite(offset, nbyte, buf); 	//ask pread to read nbyte characters from location: buf and store it to location offset 
     
     if (len >= 0)
     {
@@ -78,7 +78,27 @@ ssize_t OurAccess::write(void *buf, size_t nbyte)
     return len;
 }
 
-off_t OurAccess::lseek(off_t o, int whence)
+off_t WriteAccess::lseek(off_t o, int whence)
+    {
+    off_t new_o;
+    switch (whence)
+    {
+        case SEEK_SET: new_o = o; break;
+        case SEEK_CUR: new_o = offset + o; break;
+        case SEEK_END: new_o = myrf.size + o; break;
+        default: return -EINVAL;
+    }
+    
+    if (new_o < 0)
+    {
+        return -EINVAL;
+    }
+    
+    offset = new_o;
+    return offset;
+}
+
+off_t ReadAccess::lseek(off_t o, int whence)
     {
     off_t new_o;
     switch (whence)

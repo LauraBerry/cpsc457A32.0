@@ -64,15 +64,28 @@ extern map<string,MyRamFile> myKernelFS;
 extern char* savedMemory;
 
 // subclass OurAccess inherits (?) Access class
-class OurAccess : public Access {
+class ReadAccess : public Access {
     SpinLock olock;
     off_t offset;
     const MyRamFile &myrf;
 public:
-    OurAccess(const MyRamFile& myrf) : offset(0), myrf(myrf) {}
+    ReadAccess(const MyRamFile& myrf) : offset(0), myrf(myrf) {}
     virtual ssize_t pread(void *buf, size_t nbyte, off_t o);
-    virtual ssize_t pwrite(off_t o, size_t nbyte, void *buf);
     virtual ssize_t read(void *buf, size_t nbyte);
+    virtual off_t lseek(off_t o, int whence);
+};
+//Laura: everytime i ask it to read n characters the offset is increased by n 
+//for a new instance the offset is 0.
+//this needs the ram file to go in. so if you have an inode it needs to get passed in here
+
+
+class WriteAccess : public Access {
+    SpinLock olock;
+    off_t offset;
+    const MyRamFile &myrf;
+public:
+    WriteAccess(const MyRamFile& myrf) : offset(0), myrf(myrf) {}
+    virtual ssize_t pwrite(off_t o, size_t nbyte, void *buf);
     virtual ssize_t write( void *buf, size_t nbyte);
     virtual off_t lseek(off_t o, int whence);
 };
