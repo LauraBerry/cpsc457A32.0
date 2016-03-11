@@ -370,33 +370,33 @@ apDone:
   }
   StdOut.print(kendl);
 
+
+	/*A3*/
+	KOUT::out1("savedMemory initalized");
+	KOUT::outl();
+	savedMemory= new char [5000];
+	//Laura: need to figure out how to copy into array.
+	/*A3*/
+
   DBG::outl(DBG::Boot, "Building kernel filesystem...");
+
   // initialize kernel file system with boot modules
   //need to alocate a big array to save space for the read files. 5000 slots==big
   Multiboot::readModules(kernelBase); //Laura: go and see where they are stored and go and put them in a table so that they can be accessed.
-
   // more info from ACPI; could find IOAPIC interrupt pins for PCI devices
   initACPI2(); // needs "current thread"
 
   // initialize CDI drivers
 
+
   initCdiDrivers();
- 	/*A3*/
-  	savedMemory= new char [5000];
-for (int i=0; i<5000; i++)
-	{
-		savedMemory[i]='a';
-	}
-
-	//Laura: need to figure out how to copy into array.
-	/*A3*/
-
   DBG::outl(DBG::Boot, "CDI drivers initialized.");
 
   // probe for PCI devices
   list<PCIDevice> pciDevList;
   PCI::sanityCheck();
   PCI::checkAllBuses(pciDevList);
+
 
   // initialize TCP/IP stack - needed to start network devices
   DBG::outl(DBG::Boot, "Starting network subsystem...");
@@ -413,6 +413,7 @@ for (int i=0; i<5000; i++)
 
 void Machine::bootCleanup() {
   DBG::outl(DBG::Boot, "********* MEMORY CLEANUP *********");
+
 
   // free AP boot code
   frameManager.releaseRegion(BOOTAP16, pagesize<1>());
@@ -431,6 +432,8 @@ void Machine::bootCleanup() {
   kernelSpace.mapDirect<1>(Paging::vtop(Screen::getAddress()), videoAddr, pagesize<1>(), Paging::MMapIO);
   Screen::setAddress(videoAddr);
 
+
+
   // unmap & free kernel boot memory
   Paging::unmap<kernelpl>(kernelBase);
   frameManager.releaseRegion( vaddr(&__KernelBoot) - kernelBase, kernelBase + kernelps - vaddr(&__KernelBoot) );
@@ -442,6 +445,9 @@ void Machine::bootCleanup() {
   // VM addresses from above are not reused, thus no TLB invalidation needed
   DBG::outl(DBG::Boot, "FM/boot:", frameManager);
   DBG::outl(DBG::Boot, "AS/boot: ", kernelSpace);
+
+
+
 }
 
 void Machine::bootMain() {
