@@ -53,6 +53,7 @@ void kosMain() {
       KOUT::out1(c);
     }
     KOUT::outl();
+ 
   }
 
     /*A3*/
@@ -66,38 +67,53 @@ void kosMain() {
 
 	KOUT::out1("myKernelFS"); 		//fill myKernelFS the same way kernelFS was filled.
 	KOUT::outl();
-	/*auto iter3 = myKernelFS.find("motb");
-	if (iter3 == myKernelFS.end())
+	int j=0;
+auto iter4 = myKernelFS.find("motb");
+    if (iter4 == myKernelFS.end()) 
+    {
+        KOUT::outl("motb information not found");
+    } 
+    else 
+    {
+		KOUT::outl("motb information found");
+		KOUT::outl();
+        ReadAccess f(iter4->second);
+		KOUT::outl("read data: [ ");
+        for (;;) 
+        {
+            if (f.read(&savedMemory[j], 1) == 0) break;
+			else
+			{
+				KOUT::out1(savedMemory[j]);		
+			}
+		j++;
+       }
+		KOUT::outl(" ]");
+		KOUT::outl();
+    } 
+
+	auto iter5 = myKernelFS.find("motb");
+    if (iter5 == myKernelFS.end()) 
+    {
+        KOUT::outl("motb information not found");
+    } 
+    else 
+    {
+		KOUT::outl();
+      	WriteAccess f(iter5->second);
+        for (int i =0;i<21;i++) 
+        {
+            if (f.write(&outputmessage[i], 1, j) == 0) break;
+			j++;
+       }
+    } 
+	KOUT::outl("data after write: [ ");
+	for(int i=0;i<250;i++)
 	{
-		KOUT::outl("motb information not found");
+		KOUT::out1(savedMemory[i]);
 	}
-	else
-	{
-		OurAccess f(iter3->second);
-		for (;;) {
-			char c;
-			if (f.read(&c, 1) == 0) break;
-			KOUT::out1(c);
-		}
-
-		KOUT::outl();
-
-		for(int i=0; i<21; i++)
-		{
-			if(f.write(&outputMessage[i], 1)==0) break;
-			KOUT::out1("wrote to file");
-		}
-
-		KOUT::outl();
-
-		for (;;)
-		{
-			char c;
-			if (f.read(&c, 1) == 0) break;
-			KOUT::out1(c);
-		}
-			KOUT::outl();
-	}*/
+	KOUT::outl(" ]");
+	KOUT::outl();
 
 	/* OUTPUTS A BUNCH OF GARBAGE BECAUSE BINARY FILES*/
 
@@ -111,15 +127,43 @@ void kosMain() {
 		KOUT::outl("filesystem_test information found");
 		KOUT::outl();
         ReadAccess f(iter2->second);
+		KOUT::outl("read data: [ ");
         for (;;) 
         {
-            char c;
-            if (f.read(&c, 1) == 0) break;
-			KOUT::out1(c);
-        }
-        KOUT::outl();
+            if (f.read(&savedMemory[j], 1) == 0) break;
+			else
+			{
+				KOUT::out1(savedMemory[j]);		
+			}
+		j++;
+       }
+		KOUT::outl(" ]");
+		KOUT::outl();
     } 
-	
+
+	auto iter3 = myKernelFS.find("filesystem_test");
+    if (iter3 == myKernelFS.end()) 
+    {
+        KOUT::outl("filesystem_test information not found");
+    } 
+    else 
+    {
+		KOUT::outl();
+      	WriteAccess f(iter3->second);
+        for (int i =0;i<21;i++) 
+        {
+            if (f.write(&outputmessage[i], 1, j) == 0) break;
+		j++;
+       }
+    } 
+
+	KOUT::outl("data after write: [");
+	for(int i=0;i<250;i++)
+	{
+		KOUT::out1(savedMemory[i]);
+	}
+	KOUT::outl(" ]");
+	KOUT::outl();
 /*A3*/
 		
 #if TESTING_TIMER_TEST

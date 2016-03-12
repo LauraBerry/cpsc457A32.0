@@ -34,6 +34,8 @@ static const char* memtype[] __section(".boot.data") = {
 vaddr Multiboot::mbiStart = 0;
 vaddr Multiboot::mbiEnd = 0;
 
+
+
 void Multiboot::initDebug( bool msg ) {
   FORALLTAGS(tag,mbiStart,mbiEnd) {
     if (tag->type == MULTIBOOT_TAG_TYPE_CMDLINE) {
@@ -169,6 +171,7 @@ void Multiboot::readModules(vaddr disp) {
 
 	/* A3 */
 	int last = 0;
+	int start;
 	/* A3 */
 
 	FORALLTAGS(tag,mbiStart,mbiEnd) {
@@ -178,7 +181,6 @@ void Multiboot::readModules(vaddr disp) {
 			string name = cmd.substr(0, cmd.find_first_of(' '));
 			kernelFS.insert( {name, {tm->mod_start + disp, tm->mod_start, tm->mod_end - tm->mod_start}} );//(virtual, physical, size)
 
-				KOUT::outl(tm->mod_end - tm->mod_start);
 			/*A3*/
             // copy into temp
             /* ATTEMPT ONE */
@@ -189,25 +191,20 @@ void Multiboot::readModules(vaddr disp) {
 				KOUT::outl("if loop");
 				KOUT::outl();
 				memcpy(&temp, (bufptr_t)(tm->mod_start + disp), (tm->mod_end - tm->mod_start));  
-
+				start=last;
 				for(int i = last; i < (tm->mod_end - tm->mod_start); i++)
 				{
-					KOUT::out1(temp[i]);
-					KOUT::out1(savedMemory[i]);
 
 					savedMemory[i] = temp[i];
 					
 					last = i; 
-					//savedMemory[i] = 'a';
 				} 
-
+				myKernelFS.insert( {name, {tm->mod_start + disp, start, tm->mod_end - tm->mod_start}} );
 			 }
 			else
 			{
 				continue;
 			}
-
-			myKernelFS.insert( {name, {tm->mod_start + disp, tm->mod_start, tm->mod_end - tm->mod_start}} );
 			/*A3*/		
 		}
 	}

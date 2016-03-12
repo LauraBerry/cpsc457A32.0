@@ -25,6 +25,7 @@ class Multiboot {
   static vaddr mbiEnd                                 __section(".boot.data");
   static void initDebug(bool msg)                     __section(".boot.text");
 public:
+ 
   static vaddr init(mword magic, vaddr mbi)           __section(".boot.text");
   static void init2()                                 __section(".boot.text");
   static void remap(vaddr disp)                       __section(".boot.text");

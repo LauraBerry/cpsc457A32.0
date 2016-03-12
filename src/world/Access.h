@@ -52,9 +52,9 @@ extern map<string,RamFile> kernelFS;
 //if doing an index there needs to be an array in here.
 struct MyRamFile {
   vaddr vma; //Laura: this needs to be changed to the virtual address
-  paddr pma;
+  int pma;
   size_t size;
-  MyRamFile(vaddr v, paddr p, size_t s) : vma(v), pma(p), size(s) {}
+  MyRamFile(vaddr v, int p, size_t s) : vma(v), pma(p), size(s) {}
 };
 
 // Laura: this is storing the name of the file and the info on how to access it.
@@ -85,8 +85,8 @@ class WriteAccess : public Access {
     const MyRamFile &myrf;
 public:
     WriteAccess(const MyRamFile& myrf) : offset(0), myrf(myrf) {}
-    virtual ssize_t pwrite(off_t o, size_t nbyte, void *buf);
-    virtual ssize_t write( void *buf, size_t nbyte);
+    virtual ssize_t pwrite(off_t o, size_t nbyte, void *buf, int j);
+    virtual ssize_t write( void *buf, size_t nbyte, int length);
     virtual off_t lseek(off_t o, int whence);
 };
 //Laura: everytime i ask it to read n characters the offset is increased by n 

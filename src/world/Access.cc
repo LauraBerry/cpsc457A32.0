@@ -57,22 +57,31 @@ ssize_t ReadAccess::read(void *buf, size_t nbyte)
 
 //Laura: i have the size, i check where it has to start and the number of bytes to see if it is to large
 //if it is to large i normalize it as much as possible
-ssize_t WriteAccess::pwrite(off_t o,  size_t nbyte,void *buf)
+ssize_t WriteAccess::pwrite(off_t o,  size_t nbyte,void *buf, int j)
 {
+    // myrf -> myKernelFS
+    if (o + nbyte > myrf.size)
+    {
+        nbyte = myrf.size - o;
+    }
+    
+    //copy into buf from (bufptr_t)(rf.vma + o) for nbyte bytes.	 
+	memcpy( &savedMemory[j], buf, nbyte );
+
     return nbyte;
 }
 
-ssize_t WriteAccess::write(void *buf, size_t nbyte) 
+ssize_t WriteAccess::write(void *buf, size_t nbyte, int length) 
 {
     olock.acquire();
-    ssize_t len = WriteAccess::pwrite(offset, nbyte, buf); 	//ask pread to read nbyte characters from location: buf and store it to location offset 
-    
+		ssize_t len = WriteAccess::pwrite(offset, nbyte, buf, length); 	//ask pread to read nbyte characters from location: buf and store it to location offset 
+
     if (len >= 0)
     {
         //increment the offset.
         offset += len;				
     }
-    
+
     olock.release();
     
     return len;
