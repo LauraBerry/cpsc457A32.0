@@ -34,8 +34,6 @@ static const char* memtype[] __section(".boot.data") = {
 vaddr Multiboot::mbiStart = 0;
 vaddr Multiboot::mbiEnd = 0;
 
-
-
 void Multiboot::initDebug( bool msg ) {
   FORALLTAGS(tag,mbiStart,mbiEnd) {
     if (tag->type == MULTIBOOT_TAG_TYPE_CMDLINE) {
@@ -168,48 +166,12 @@ void Multiboot::getMemory(RegionSet<Region<paddr>>& rs) {
 }
 
 void Multiboot::readModules(vaddr disp) {
-
-	/* A3 */
-	int last = 0;
-	int start;
-	/* A3 */
-
-	FORALLTAGS(tag,mbiStart,mbiEnd) {
-		if (tag->type == MULTIBOOT_TAG_TYPE_MODULE) {
-			multiboot_tag_module* tm = (multiboot_tag_module*)tag;
-			string cmd = tm->cmdline;
-			string name = cmd.substr(0, cmd.find_first_of(' '));
-			kernelFS.insert( {name, {tm->mod_start + disp, tm->mod_start, tm->mod_end - tm->mod_start}} );//(virtual, physical, size)
-
-			/*A3*/
-            // copy into temp
-            /* ATTEMPT ONE */
-
-			if((tm->mod_end - tm->mod_start) < 5000)
-			{ 	
-            	char temp[tm->mod_end - tm->mod_start];
-				KOUT::outl("if loop");
-				KOUT::outl();
-				memcpy(&temp, (bufptr_t)(tm->mod_start + disp), (tm->mod_end - tm->mod_start));  
-				start=last;
-				for(int i = last; i < (tm->mod_end - tm->mod_start); i++)
-				{
-
-					savedMemory[i] = temp[i];
-					
-					last = i; 
-				} 
-				myKernelFS.insert( {name, {tm->mod_start + disp, start, tm->mod_end - tm->mod_start}} );
-			 }
-			else
-			{
-				continue;
-			}
-			/*A3*/		
-		}
-	}
+  FORALLTAGS(tag,mbiStart,mbiEnd) {
+    if (tag->type == MULTIBOOT_TAG_TYPE_MODULE) {
+      multiboot_tag_module* tm = (multiboot_tag_module*)tag;
+      string cmd = tm->cmdline;
+      string name = cmd.substr(0, cmd.find_first_of(' '));
+      kernelFS.insert( {name, {tm->mod_start + disp, tm->mod_start, tm->mod_end - tm->mod_start}} );
+    }
+  }
 }
-//Laura: goes through all the tags and if they are a text file they get the module and the name  of the file read, 
-//copy them from here and put them in your own place in memory and then insert them in your new structure. at first they will be contiguously stored, later it will move around.
-
-
